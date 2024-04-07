@@ -50,11 +50,9 @@ public class EmployeeService {
 
     @Transactional(readOnly = true)
     public Employees getByFilters(EmployeeFilters filters){
-
         List<EmployeeEntity> employees = commandFactory
                 .create(commandFactory.FILTER_ENTITY, filters.getItems(), employeeJpaConnector)
                 .execute();
-
         return new Employees()
                 .items(employees.stream()
                     .map(employeeMapper::map)

@@ -31,9 +31,10 @@ public class CommandFactory<T> {
     private Object[][] convertToGenericObject(List<T> objects){
 
         if(!objects.isEmpty()){
-            T foundObject = objects.stream().findFirst().get();
-            Class<?> clazz = foundObject.getClass();
-            Field[] fields = clazz.getDeclaredFields();
+
+            final T foundObject = objects.stream().findFirst().get();
+            final Class<?> clazz = foundObject.getClass();
+            final Field[] fields = clazz.getDeclaredFields();
             final Object[][] converted = new Object[objects.size()][fields.length];
 
             for(int i = 0; i < objects.size(); i++){
