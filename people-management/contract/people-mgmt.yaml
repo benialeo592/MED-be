@@ -1,0 +1,195 @@
+openapi: 3.0.1
+info:
+  title: MEDPeopleManagementAPI
+  version: 1.0.0
+
+paths:
+  /employee/{id}:
+    get:
+      tags:
+        - EmployeeApi
+      summary: Get employee
+      description: Get an employee by id
+      operationId: getEmployee
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+          description: The employee id
+      responses:
+        200:
+          description: Employee found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+        404:
+          description: Employee not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /employee/create:
+    post:
+      tags:
+        - EmployeeApi
+      summary: Create or update employee
+      description: Create or update an employee
+      operationId: postEmployee
+      requestBody:
+        description: Employee request object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employee'
+      responses:
+        200:
+          description: Employee created or updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        404:
+          description: Employee not created or not updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /employee/{id}/delete:
+    delete:
+      tags:
+        - EmployeeApi
+      summary: Delete employee
+      description: Delete an employee
+      operationId: deleteEmployee
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+          description: The employee id
+      responses:
+        200:
+          description: Employee deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessMessage'
+        404:
+          description: Employee not deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /employee/filter:
+    post:
+      tags:
+        - EmployeeApi
+      summary: Get employees by filters
+      description: Get employees by filters
+      operationId: getEmployees
+      requestBody:
+        description: Employee filter object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeFilters'
+      responses:
+        200:
+          description: Employee found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employees'
+        404:
+          description: Employee not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstName:
+          type: string
+        lastName:
+          type: string
+        fiscalCode:
+          type: string
+        email:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+        birthDate:
+          type: string
+
+    Employees:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+
+    EmployeeFilters:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Filter'
+
+    Filter:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        operation:
+          $ref: '#/components/schemas/FilterOperationEnum'
+        value:
+          type: string
+
+    FilterOperationEnum:
+      type: string
+      enum:
+        - "LESS_THAN"
+        - "EQUAL"
+        - "NOT_EQUAL"
+        - "GREATER_THAN"
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        roleName:
+          type: string
+
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+
+    SuccessMessage:
+      type: object
+      properties:
+        message:
+          type: string
